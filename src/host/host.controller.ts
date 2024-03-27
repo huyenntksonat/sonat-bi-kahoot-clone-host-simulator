@@ -5,8 +5,8 @@ import { HostService } from './host.service';
 export class HostController {
   constructor(private readonly hostService: HostService) {}
 
-  @Get('create-game/:name')
-  async createGame(@Param('name') name: string): Promise<String> {
-    return await this.hostService.hello(name);
+  @Get('create-game/')
+  async createGame(): Promise<any> {
+    return await this.hostService.createGame();
   }
 }
