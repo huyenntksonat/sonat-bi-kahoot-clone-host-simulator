@@ -1,11 +1,12 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { BaseThirdPartyService } from './base-thirdparty.service';
-import { PlayerSimulatorService } from './players-simulator.service';
+import { BaseThirdPartyService } from './base-third-party.service';
+import { KahootService } from './kahoot.service';
+import { PlayersSimulator } from './players-simulator.service';
 
 @Module({
   imports: [HttpModule],
-  providers: [BaseThirdPartyService, PlayerSimulatorService],
-  exports: [PlayerSimulatorService],
+  providers: [BaseThirdPartyService, KahootService, PlayersSimulator],
+  exports: [BaseThirdPartyService, KahootService, PlayersSimulator],
 })
-export class ThirdPartyModule {}
+export class ThirdPartyModule { }

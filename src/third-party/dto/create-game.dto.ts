@@ -14,4 +14,10 @@ export class CreateGameDto {
   title: string;
 
   questions: string[];
+
+  constructor(data?: Partial<CreateGameDto>) {
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 }

@@ -1,4 +1,7 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { AxiosError, AxiosResponse } from 'axios';
+import { Observable, catchError, firstValueFrom } from 'rxjs';
 import {
   BEARER_TOKEN,
   GAME_TITLE,
@@ -7,33 +10,39 @@ import {
   QUESTIONS,
 } from 'src/constant/config.constant';
 import { CreateGameDto } from 'src/third-party/dto/create-game.dto';
-import { PlayerSimulatorService } from 'src/third-party/service/players-simulator.service';
+import { BaseThirdPartyService } from 'src/third-party/service/base-third-party.service';
+import { KahootService } from 'src/third-party/service/kahoot.service';
 import {
   CREATE_GAME_URL,
   KAHOOT_F8_BASE_URL,
-} from 'src/third-party/url.constant';
+} from 'src/third-party/constant/url.constant';
+import { PlayersSimulator } from 'src/third-party/service/players-simulator.service';
 
 @Injectable()
 export class HostService {
-  constructor(private readonly playerSimulator: PlayerSimulatorService) {}
+  constructor(
+    private readonly kahootService: KahootService,
+    private readonly playersSimulatorService: PlayersSimulator
+  ) { }
 
   async hello(name: string): Promise<string> {
     return await `Hello ${name}`;
   }
 
-  async createGame() {
-    var dto = new CreateGameDto();
-    dto.type = GAME_TYPE;
-    dto.title = GAME_TITLE;
-    dto.questions = QUESTIONS;
-    dto.kahoot = KAHOOT_ID;
-    return this.playerSimulator.sendPost(
-      KAHOOT_F8_BASE_URL + CREATE_GAME_URL,
-      dto,
-      {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${BEARER_TOKEN}`,
-      },
-    );
+  async delay(ms: number) {
+    return new Promise<void>(resolve => setTimeout(resolve, ms));
+  }
+
+  async createGame(): Promise<any> {
+    var response = await this.kahootService.createGame();
+    const pin = response.data.pin
+    console.log(`Pin is `, pin);
+    await this.delay(5000);
+
+    // make requests to players app to join game
+    var response2 = await this.playersSimulatorService.joinGame(pin);
+    console.log(`Response from players simulator: ${response2}`);
+
+    return pin;
   }
 }

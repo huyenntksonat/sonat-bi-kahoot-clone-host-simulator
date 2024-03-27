@@ -1,5 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { BaseThirdPartyService } from './base-thirdparty.service';
+import { JOIN_GAME_URL, PLAYERS_SIMULATOR_BASE_URL } from "../constant/url.constant";
+import { BaseThirdPartyService } from "./base-third-party.service";
 
-@Injectable()
-export class PlayerSimulatorService extends BaseThirdPartyService {}
+export class PlayersSimulator extends BaseThirdPartyService {
+
+    joinGame(pin: string) {
+        return this.sendGet(
+            `${PLAYERS_SIMULATOR_BASE_URL}${JOIN_GAME_URL}/${pin}`
+        );
+    }
+}
