@@ -51,7 +51,7 @@ export class HostService {
         pin,
         currentQuestion.id,
       );
-      // await this.delay(5000);
+      await this.delay(5000);
       var pushQuestionDto = new PushQuestionDto({
         question: currentQuestion.id,
         options: currentQuestion.options.map(
@@ -65,14 +65,14 @@ export class HostService {
       });
       var pushQuestionResponse =
         await this.playersSimulatorService.pushQuestion(pin, pushQuestionDto);
-      // await this.delay(5000);
+      await this.delay(5000);
       var closeQuestionResponse = await this.kahootService.closeQuestion(
         pin,
         currentQuestion.id,
       );
-      // await this.delay(5000);
+      await this.delay(5000);
       var leaderboardResponse = await this.kahootService.getLeaderboard(pin);
-      // await this.delay(5000);
+      await this.delay(5000);
       if (currentQuestionNo == QUESTION_LIST.length - 1) {
         break;
       }
@@ -83,9 +83,11 @@ export class HostService {
         pin,
         nextQuestionId,
       );
-      // await this.delay(5000);
+      await this.delay(5000);
     }
-    var endGameResponse = this.kahootService.endGame(pin);
+    await this.delay(5000);
+    var endGameResponse = await this.kahootService.endGame(pin);
+    return endGameResponse.data;
   }
 
   async createGame(token: string): Promise<any> {
