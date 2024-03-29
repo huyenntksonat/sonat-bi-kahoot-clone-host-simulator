@@ -13,42 +13,11 @@ export class PlayersSimulator extends BaseThirdPartyService {
   }
 
   pushQuestion(pin: string, dto: PushQuestionDto) {
-    console.log(`Arriving at pushquestion at player simulator`);
+    // console.log(`Arriving at pushquestion at player simulator`);
 
     return this.sendPost(
       `${PLAYERS_SIMULATOR_BASE_URL}/players/${pin}/push-question`,
       dto,
     );
-  }
-
-  startQuestion(pin: string, questionId: string) {
-    return this.sendPost(
-      `${KAHOOT_F8_BASE_URL}/games/${pin}/startquestion/${questionId}`,
-      {}
-    );
-  }
-
-  nextQuestion(pin: string, questionId: string) {
-    return this.sendPost(
-      `${KAHOOT_F8_BASE_URL}/games/${pin}/nextquestion/${questionId}`,
-      {}
-    );
-
-  }
-
-  closeQuestion(pin: string, questionId: string) {
-    return this.sendPost(
-      `${KAHOOT_F8_BASE_URL}/games/${pin}/closequestion/${questionId}`,
-      {}
-    );
-
-  }
-
-  getLeaderboard(pin: string) {
-    return this.sendGet(
-      `${KAHOOT_F8_BASE_URL}/games/${pin}/leaderboard`,
-      {}
-    );
-
   }
 }

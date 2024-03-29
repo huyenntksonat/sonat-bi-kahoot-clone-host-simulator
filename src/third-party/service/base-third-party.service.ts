@@ -11,6 +11,7 @@ export class BaseThirdPartyService {
     url: string,
     requestBody: any,
     headers?: Record<string, string>,
+    shouldLog?: boolean,
   ): Promise<any> {
     var start = Date.now();
     const { data } = await firstValueFrom(
@@ -22,14 +23,20 @@ export class BaseThirdPartyService {
       ),
     );
     var end = Date.now();
-    console.log(
-      `Url = ${url}\tStart = ${start}\tEnd = ${end}\tDuration = ${Math.abs(end - start)}`,
-    );
+    if (shouldLog) {
+      console.log(
+        `Url = ${url}\tStart = ${start}\tEnd = ${end}\tDuration = ${Math.abs(end - start)}`,
+      );
+    }
     // console.log(`Response data: `, data);
     return data;
   }
 
-  async sendGet(url: string, headers?: Record<string, string>): Promise<any> {
+  async sendGet(
+    url: string,
+    headers?: Record<string, string>,
+    shouldLog?: boolean,
+  ): Promise<any> {
     var start = Date.now();
     const { data } = await firstValueFrom(
       this.httpService.get(url, { headers: headers }).pipe(
@@ -40,9 +47,11 @@ export class BaseThirdPartyService {
       ),
     );
     var end = Date.now();
-    console.log(
-      `Url = ${url}\tStart = ${start}\tEnd = ${end}\tDuration = ${Math.abs(end - start)}`,
-    );
+    if (shouldLog) {
+      console.log(
+        `Url = ${url}\tStart = ${start}\tEnd = ${end}\tDuration = ${Math.abs(end - start)}`,
+      );
+    }
     return data;
   }
 }

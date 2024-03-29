@@ -1,14 +1,19 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { HostService } from './host.service';
 import { response } from 'express';
 
 @Controller('host')
 export class HostController {
-  constructor(private readonly hostService: HostService) { }
+  constructor(private readonly hostService: HostService) {}
 
-  @Get('create-game/')
-  async createGame(): Promise<any> {
-    var res = await this.hostService.createGame();
+  @Post('simulate')
+  simulateGame(@Body() requests) {
+    this.hostService.simulate(requests.token);
+  }
+
+  @Post('create-game/')
+  async createGame(@Body() request): Promise<any> {
+    var res = await this.hostService.createGame(request.token);
     return res;
   }
 
@@ -27,7 +32,6 @@ export class HostController {
     return this.hostService.nextQuestion();
   }
 
-
   @Post('close-question')
   closeQuestion() {
     return this.hostService.closeQuestion();
@@ -37,6 +41,4 @@ export class HostController {
   getLeaderboard() {
     return this.hostService.getLeaderboard();
   }
-
-
 }

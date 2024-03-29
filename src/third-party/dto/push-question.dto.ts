@@ -1,7 +1,7 @@
 export class PushQuestionDto {
   question: string;
 
-  options: Option[];
+  options: QuestionOption[];
 
   constructor(data?: Partial<PushQuestionDto>) {
     if (data) {
@@ -10,14 +10,14 @@ export class PushQuestionDto {
   }
 }
 
-export class Option {
+export class QuestionOption {
   description: string;
 
   TorF: boolean;
 
   id: string;
 
-  constructor(data?: Partial<Option>) {
+  constructor(data?: Partial<QuestionOption>) {
     if (data) {
       Object.assign(this, data);
     }
