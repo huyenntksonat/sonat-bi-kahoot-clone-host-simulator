@@ -16,7 +16,7 @@ export class BaseThirdPartyService {
     const { data } = await firstValueFrom(
       this.httpService.post(url, requestBody, { headers: headers }).pipe(
         catchError((er: AxiosError) => {
-          // console.log(`An error happened: `, er);
+          console.log(`An error happened: `, er);
           throw er;
         }),
       ),
