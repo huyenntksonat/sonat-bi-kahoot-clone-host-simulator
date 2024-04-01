@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { BaseThirdPartyService } from './base-third-party.service';
-import { BEARER_TOKEN, CREATE_GAME_DTO } from 'src/constant/config.constant';
 import { CreateGameDto } from '../dto/create-game.dto';
 import { KAHOOT_GAME_URL, KAHOOT_F8_BASE_URL } from '../constant/url.constant';
 
 @Injectable()
 export class KahootService extends BaseThirdPartyService {
-  createGame(token: string): Promise<any> {
-    var dto = new CreateGameDto(CREATE_GAME_DTO);
+  getKahootbyId(id: string, token: string) {
+    return this.sendGet(
+      `${KAHOOT_F8_BASE_URL}/kahoots/${id}`,
+      {
+        Authorization: `Bearer ${token}`,
+      },
+      true,
+    );
+  }
 
+  createGame(createGameDto: CreateGameDto, token: string): Promise<any> {
     return this.sendPost(
       `${KAHOOT_F8_BASE_URL}${KAHOOT_GAME_URL}`,
-      dto,
+      createGameDto,
       {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -62,7 +69,7 @@ export class KahootService extends BaseThirdPartyService {
     return this.sendGet(
       `${KAHOOT_F8_BASE_URL}/games/${pin}/leaderboard`,
       {},
-      true
+      true,
     );
   }
 

@@ -1,19 +1,20 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { HostService } from './host.service';
 import { response } from 'express';
+import { SimulateGameDto } from './dto/simulate-game.dto';
 
 @Controller('host')
 export class HostController {
   constructor(private readonly hostService: HostService) {}
 
   @Post('simulate')
-  simulateGame(@Body() requests) {
-    this.hostService.simulate(requests.token);
+  simulateGame(@Body() request: SimulateGameDto) {
+    this.hostService.simulate(request);
   }
 
   @Post('create-game/')
   async createGame(@Body() request): Promise<any> {
-    var res = await this.hostService.createGame(request.token);
+    var res = await this.hostService.createGame(request, request.token);
     return res;
   }
 

@@ -8,10 +8,10 @@ import {
 } from 'src/third-party/dto/push-question.dto';
 import {
   CURRENT_GAME_PIN,
-  CURRENT_QUESTION,
   QS_ID,
-  QUESTION_LIST,
 } from 'src/constant/config.constant';
+import { SimulateGameDto } from './dto/simulate-game.dto';
+import { CreateGameDto } from 'src/third-party/dto/create-game.dto';
 
 @Injectable()
 export class HostService {
@@ -28,25 +28,38 @@ export class HostService {
     return new Promise<void>((resolve) => setTimeout(resolve, ms));
   }
 
-  async simulate(token: string) {
+  async simulate(dto: SimulateGameDto) {
+    // ------------------------------------- Get kahoot -------------------------------------
+    const getKahootResponse = await this.kahootService.getKahootbyId(
+      dto.kahoot,
+      dto.token,
+    );
     // ------------------------------------- Create game -------------------------------------
-    var createGameResponse = await this.kahootService.createGame(token);
+    const createGameDto: CreateGameDto = new CreateGameDto({
+      type: dto.type,
+      kahoot: dto.kahoot,
+      title: getKahootResponse.data.title,
+      questions: getKahootResponse.data.questions.map((item) => item.id),
+    });
+    const createGameResponse = await this.kahootService.createGame(
+      createGameDto,
+      dto.token,
+    );
     const pin = createGameResponse.data.pin;
-    // console.log(`Pin is `, pin);
+    
     await this.delay(5000);
     // ------------------------------------- Join game -------------------------------------
-    var joinGameResponse = await this.playersSimulatorService.joinGame(pin);
-    // console.log(`Response from players simulator: ${response2}`);
+    const joinGameResponse = await this.playersSimulatorService.joinGame(pin);
     await this.delay(5000);
     // ------------------------------------- Start game -------------------------------------
-    var startGameResponse = await this.kahootService.startGame(pin);
-    await this.simulatePlay(pin);
+    const startGameResponse = await this.kahootService.startGame(pin);
+    await this.simulatePlay(pin, getKahootResponse.data.questions);
   }
 
-  async simulatePlay(pin: string) {
+  async simulatePlay(pin: string, questions: any) {
     var currentQuestionNo = 0;
-    while (currentQuestionNo < QUESTION_LIST.length) {
-      var currentQuestion = QUESTION_LIST[currentQuestionNo];
+    while (currentQuestionNo < questions.length) {
+      var currentQuestion = questions[currentQuestionNo];
       var startQuestionResponse = await this.kahootService.startQuestion(
         pin,
         currentQuestion.id,
@@ -73,11 +86,11 @@ export class HostService {
       await this.delay(5000);
       var leaderboardResponse = await this.kahootService.getLeaderboard(pin);
       await this.delay(5000);
-      if (currentQuestionNo == QUESTION_LIST.length - 1) {
+      if (currentQuestionNo == questions.length - 1) {
         break;
       }
       currentQuestionNo++;
-      var nextQuestion = QUESTION_LIST[currentQuestionNo];
+      var nextQuestion = questions[currentQuestionNo];
       var nextQuestionId = nextQuestion._id;
       var nextQuestionResponse = await this.kahootService.nextQuestion(
         pin,
@@ -90,8 +103,11 @@ export class HostService {
     return endGameResponse.data;
   }
 
-  async createGame(token: string): Promise<any> {
-    var createGameResponse = await this.kahootService.createGame(token);
+  async createGame(createGameDto: CreateGameDto, token: string): Promise<any> {
+    var createGameResponse = await this.kahootService.createGame(
+      createGameDto,
+      token,
+    );
     const pin = createGameResponse.data.pin;
     return createGameResponse;
   }
