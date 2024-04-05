@@ -47,12 +47,12 @@ export class HostService {
     );
     const pin = createGameResponse.data.pin;
     
-    await this.delay(5000);
+    // await this.delay(5000);
     // ------------------------------------- Join game -------------------------------------
     const joinGameResponse = await this.playersSimulatorService.joinGame(pin);
     await this.delay(5000);
     // ------------------------------------- Start game -------------------------------------
-    const startGameResponse = await this.kahootService.startGame(pin);
+    // const startGameResponse = await this.kahootService.startGame(pin);
     await this.simulatePlay(pin, getKahootResponse.data.questions);
   }
 
@@ -78,14 +78,14 @@ export class HostService {
       });
       var pushQuestionResponse =
         await this.playersSimulatorService.pushQuestion(pin, pushQuestionDto);
-      await this.delay(5000);
+      await this.delay(15000);
       var closeQuestionResponse = await this.kahootService.closeQuestion(
         pin,
         currentQuestion.id,
       );
-      await this.delay(5000);
+      // await this.delay(5000);
       var leaderboardResponse = await this.kahootService.getLeaderboard(pin);
-      await this.delay(5000);
+      // await this.delay(5000);
       if (currentQuestionNo == questions.length - 1) {
         break;
       }

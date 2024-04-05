@@ -5,4 +5,5 @@ export const KAHOOT_GAME_URL = '/games';
 
 // Players simulator
 export const PLAYERS_SIMULATOR_BASE_URL = 'http://localhost:8002';
+export const PLAYERS_SIMULATOR_BASE_URL2 = 'http://localhost:8003';
 export const PS_JOIN_GAME_URL = '/players/join-game'; ///players/join-game/:pin

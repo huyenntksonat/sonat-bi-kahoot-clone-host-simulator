@@ -1,8 +1,6 @@
 import {
-  KAHOOT_GAME_URL,
   PS_JOIN_GAME_URL,
   PLAYERS_SIMULATOR_BASE_URL,
-  KAHOOT_F8_BASE_URL,
 } from '../constant/url.constant';
 import { PushQuestionDto } from '../dto/push-question.dto';
 import { BaseThirdPartyService } from './base-third-party.service';
@@ -13,8 +11,6 @@ export class PlayersSimulator extends BaseThirdPartyService {
   }
 
   pushQuestion(pin: string, dto: PushQuestionDto) {
-    // console.log(`Arriving at pushquestion at player simulator`);
-
     return this.sendPost(
       `${PLAYERS_SIMULATOR_BASE_URL}/players/${pin}/push-question`,
       dto,
