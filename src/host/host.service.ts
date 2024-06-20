@@ -50,22 +50,24 @@ export class HostService {
     // await this.delay(5000);
     // ------------------------------------- Join game -------------------------------------
     const joinGameResponse = await this.playersSimulatorService.joinGame(pin);
-    await this.delay(5000);
+    await this.delay(25000);
     // ------------------------------------- Start game -------------------------------------
-    // const startGameResponse = await this.kahootService.startGame(pin);
+    const startGameResponse = await this.kahootService.startGame(pin);
     await this.simulatePlay(pin, getKahootResponse.data.questions);
   }
 
   async simulatePlay(pin: string, questions: any) {
     var currentQuestionNo = 0;
     while (currentQuestionNo < questions.length) {
+      console.log(`Question number ${currentQuestionNo + 1}`);
+      
       var currentQuestion = questions[currentQuestionNo];
-      var startQuestionResponse = await this.kahootService.startQuestion(
+      const startQuestionResponse = await this.kahootService.startQuestion(
         pin,
         currentQuestion.id,
       );
-      await this.delay(5000);
-      var pushQuestionDto = new PushQuestionDto({
+      // await this.delay(5000);
+      const pushQuestionDto = new PushQuestionDto({
         question: currentQuestion.id,
         options: currentQuestion.options.map(
           (item) =>
@@ -76,35 +78,35 @@ export class HostService {
             }),
         ),
       });
-      var pushQuestionResponse =
+      const pushQuestionResponse =
         await this.playersSimulatorService.pushQuestion(pin, pushQuestionDto);
-      await this.delay(15000);
-      var closeQuestionResponse = await this.kahootService.closeQuestion(
-        pin,
-        currentQuestion.id,
-      );
+      await this.delay(5000);
+      // const closeQuestionResponse = await this.kahootService.closeQuestion(
+      //   pin,
+      //   currentQuestion.id,
+      // );
       // await this.delay(5000);
-      var leaderboardResponse = await this.kahootService.getLeaderboard(pin);
-      // await this.delay(5000);
+      const leaderboardResponse = await this.kahootService.getLeaderboard(pin);
+      await this.delay(5000);
       if (currentQuestionNo == questions.length - 1) {
         break;
       }
       currentQuestionNo++;
-      var nextQuestion = questions[currentQuestionNo];
-      var nextQuestionId = nextQuestion._id;
-      var nextQuestionResponse = await this.kahootService.nextQuestion(
+      const nextQuestion = questions[currentQuestionNo];
+      const nextQuestionId = nextQuestion._id;
+      const nextQuestionResponse = await this.kahootService.nextQuestion(
         pin,
         nextQuestionId,
       );
-      await this.delay(5000);
+      // await this.delay(5000);
     }
-    await this.delay(5000);
-    var endGameResponse = await this.kahootService.endGame(pin);
+    await this.delay(15000);
+    const endGameResponse = await this.kahootService.endGame(pin);
     return endGameResponse.data;
   }
 
   async createGame(createGameDto: CreateGameDto, token: string): Promise<any> {
-    var createGameResponse = await this.kahootService.createGame(
+    const createGameResponse = await this.kahootService.createGame(
       createGameDto,
       token,
     );
@@ -113,7 +115,7 @@ export class HostService {
   }
 
   async startGame(pin: string): Promise<any> {
-    var response = await this.kahootService.startGame(pin);
+    const response = await this.kahootService.startGame(pin);
     // console.log(`Response of start game: `, response);
     await this.delay(5000);
     const pushQuestionDto = new PushQuestionDto({

@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Observable, catchError, firstValueFrom } from 'rxjs';
+import { Observable, catchError, firstValueFrom, lastValueFrom } from 'rxjs';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Injectable } from '@nestjs/common';
 
@@ -14,7 +14,7 @@ export class BaseThirdPartyService {
     shouldLog?: boolean,
   ): Promise<any> {
     var start = Date.now();
-    const { data } = await firstValueFrom(
+    const { data } = await lastValueFrom(
       this.httpService.post(url, requestBody, { headers: headers }).pipe(
         catchError((er: AxiosError) => {
           console.log(`An error happened: `, er);

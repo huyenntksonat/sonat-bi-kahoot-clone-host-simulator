@@ -6,8 +6,8 @@ import { PushQuestionDto } from '../dto/push-question.dto';
 import { BaseThirdPartyService } from './base-third-party.service';
 
 export class PlayersSimulator extends BaseThirdPartyService {
-  joinGame(pin: string) {
-    return this.sendGet(`${PLAYERS_SIMULATOR_BASE_URL}${PS_JOIN_GAME_URL}/${pin}`);
+  async joinGame(pin: string) {
+    return await this.sendGet(`${PLAYERS_SIMULATOR_BASE_URL}${PS_JOIN_GAME_URL}/${pin}`);
   }
 
   pushQuestion(pin: string, dto: PushQuestionDto) {
